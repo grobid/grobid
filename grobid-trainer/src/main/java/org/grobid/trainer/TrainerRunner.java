@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class TrainerRunner {
 
-    private static final List<String> models = Arrays.asList("affiliation", "chemical", "date", "citation", "ebook", "fulltext", "header", "name-citation", "name-header", "patent");
+    private static final List<String> models = Arrays.asList("acknowledgment","affiliation", "chemical", "date", "citation", "ebook", "fulltext", "header", "name-citation", "name-header", "patent");
     private static final List<String> options = Arrays.asList("0 - train", "1 - evaluate", "2 - split, train and evaluate", "3 - n-fold evaluation");
 
     private enum RunType {
@@ -128,12 +128,14 @@ public class TrainerRunner {
         } else if (model.equals("reference-segmenter")) {
             trainer = new ReferenceSegmenterTrainer();
         } else if (model.equals("figure")) {
-            trainer = new FigureTrainer();
-        } else if (model.equals("table")) {
-            trainer = new TableTrainer();
-        } else {
-            throw new IllegalStateException("The model " + model + " is unknown.");
-        }
+		    trainer = new FigureTrainer();
+		} else if (model.equals("table")) {
+		    trainer = new TableTrainer();
+		} else if (model.equals("acknowledgment")) {
+            trainer = new AcknowledgmentTrainer();
+        }else {
+			throw new IllegalStateException("The model " + model + " is unknown.");
+		}
 
         switch (mode) {
             case TRAIN:

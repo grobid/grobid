@@ -15,24 +15,14 @@
 
 package org.grobid.core.engines;
 
-import com.google.common.io.Files;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import org.grobid.core.data.Affiliation;
-import org.grobid.core.data.BibDataSet;
-import org.grobid.core.data.BiblioItem;
-import org.grobid.core.data.BiblioSet;
-import org.grobid.core.data.ChemicalEntity;
-import org.grobid.core.data.PatentItem;
-import org.grobid.core.data.Person;
+//import org.grobid.core.annotations.TeiStAXParser;
+import org.grobid.core.data.*;
 import org.grobid.core.document.Document;
 import org.grobid.core.document.DocumentSource;
 import org.grobid.core.engines.config.GrobidAnalysisConfig;
-import org.grobid.core.engines.label.SegmentationLabels;
 import org.grobid.core.exceptions.GrobidException;
-import org.grobid.core.exceptions.GrobidResourceException;
-import org.grobid.core.factory.GrobidFactory;
 import org.grobid.core.factory.GrobidPoolingFactory;
 import org.grobid.core.lang.Language;
 import org.grobid.core.utilities.Consolidation;
@@ -101,6 +91,18 @@ public class Engine implements Closeable {
      */
     public List<List<Person>> processAuthorsCitationLists(List<String> authorSequences) throws Exception {
         return null;
+    }
+
+    /**
+     * Parse a raw string containing acknowledgments.
+     *
+     * @param acknowledgmentBlock - the string containing raw acknowledgments.
+     * @return the list of all structured date objects recognized in the string.
+     * @throws IOException
+     */
+    public List<AcknowledgmentItem> processAcknowledgment(String acknowledgmentBlock) throws IOException {
+        List<AcknowledgmentItem> result = parsers.getAcknowledgmentParser().processing(acknowledgmentBlock);
+        return result;
     }
 
     /**
@@ -780,10 +782,10 @@ public class Engine implements Closeable {
      * @return the list of extracted and parserd patent and non-patent references
      *         encoded in TEI.
      */
-    public String processAllCitationsInPatent(String text, 
-                                            List<BibDataSet> nplResults, 
+    public String processAllCitationsInPatent(String text,
+                                            List<BibDataSet> nplResults,
                                             List<PatentItem> patentResults,
-                                            int consolidateCitations, 
+                                            int consolidateCitations,
                                             boolean includeRawCitations) throws Exception {
         if ((nplResults == null) && (patentResults == null)) {
             return null;
@@ -818,7 +820,7 @@ public class Engine implements Closeable {
      */
     public String processAllCitationsInXMLPatent(String xmlPath, List<BibDataSet> nplResults,
 			                                     List<PatentItem> patentResults,
-                                                 int consolidateCitations, 
+                                                 int consolidateCitations,
                                                  boolean includeRawCitations) throws Exception {
         if ((nplResults == null) && (patentResults == null)) {
             return null;
@@ -853,7 +855,7 @@ public class Engine implements Closeable {
      */
     public String processAllCitationsInPDFPatent(String pdfPath, List<BibDataSet> nplResults,
                                                  List<PatentItem> patentResults,
-                                                 int consolidateCitations, 
+                                                 int consolidateCitations,
                                                  boolean includeRawCitations) throws Exception {
         if ((nplResults == null) && (patentResults == null)) {
             return null;
@@ -878,7 +880,7 @@ public class Engine implements Closeable {
      * @throws Exception if sth. went wrong
      */
     public String annotateAllCitationsInPDFPatent(String pdfPath, 
-                                                  int consolidateCitations, 
+                                                  int consolidateCitations,
                                                   boolean includeRawCitations) throws Exception {
 		List<BibDataSet> nplResults = new ArrayList<BibDataSet>();
 		List<PatentItem> patentResults = new ArrayList<PatentItem>();
