@@ -1389,7 +1389,7 @@ public class HeaderParser extends AbstractParser {
                         BiblioItem.injectDOI(resHeader, bibo);
                 }
             }*/
-            BiblioItem bib = consolidator.consolidate(resHeader, null);
+            BiblioItem bib = consolidator.consolidate(resHeader, null, consolidate);
             if (bib != null) {
                 if (consolidate == 1)
                     BiblioItem.correct(resHeader, bib);
