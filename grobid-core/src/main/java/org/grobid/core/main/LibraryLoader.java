@@ -170,6 +170,9 @@ public class LibraryLoader {
     }
 
     public static void addLibraryPath(String pathToAdd) throws Exception {
+//        MethodHandles.Lookup cl = MethodHandles.privateLookupIn(ClassLoader.class, MethodHandles.lookup());
+//        VarHandle usr_paths = cl.findStaticVarHandle(ClassLoader.class, "usr_paths", String[].class);
+//        usr_paths.set(null);
         Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
         usrPathsField.setAccessible(true);
 

@@ -1,5 +1,8 @@
 package org.grobid.core.jni;
 
+import jep.Interpreter;
+import jep.Jep;
+import jep.JepException;
 import org.grobid.core.GrobidModel;
 import org.grobid.core.engines.label.TaggingLabels;
 import org.grobid.core.exceptions.GrobidException;
@@ -8,16 +11,15 @@ import org.grobid.core.utilities.IOUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.*;  
 import java.io.*;
-import java.lang.StringBuilder;
-import java.util.*;
-import java.util.regex.*;
-
-import jep.Jep;
-import jep.JepException;
-
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DeLFTModel {
     public static final Logger LOGGER = LoggerFactory.getLogger(DeLFTModel.class);
@@ -50,7 +52,7 @@ public class DeLFTModel {
           
         @Override
         public void run() { 
-            Jep jep = JEPThreadPool.getInstance().getJEPInstance(); 
+            Interpreter jep = JEPThreadPool.getInstance().getJEPInstance();
             try { 
                 String fullModelName = this.modelName.replace("_", "-");
 
@@ -90,9 +92,7 @@ public class DeLFTModel {
             this.architecture = architecture;
         }
 
-        private void setJepStringValueWithFileFallback(
-            Jep jep, String name, String value
-        ) throws JepException, IOException {
+        private void setJepStringValueWithFileFallback(Interpreter jep, String name, String value) throws JepException, IOException {
             try {
                 jep.set(name, value);
             } catch(JepException e) {
@@ -113,7 +113,7 @@ public class DeLFTModel {
 
         @Override
         public String call() { 
-            Jep jep = JEPThreadPool.getInstance().getJEPInstance(); 
+            Interpreter jep = JEPThreadPool.getInstance().getJEPInstance();
             StringBuilder labelledData = new StringBuilder();
             try {
                 //System.out.println(this.data);
